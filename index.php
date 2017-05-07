@@ -25,6 +25,11 @@ $config = [
     'serve-default-icons'   => true
 ];
 
+/**
+ * Check cache headers
+ *
+ * @param $config
+ */
 function cacheHeaders($config) {
     header('Cache-Control: ' . (empty($config['cache-private']) ? 'public' : 'private') .
         ', max-age=' . $config['cache'] .
@@ -35,19 +40,40 @@ function cacheHeaders($config) {
     }
 }
 
-function sendCacheHeaders() {
-    global $config;
-
+/**
+ * Send cache headers
+ *
+ * @param $config
+ */
+function sendCacheHeaders($config) {
     // Check for caching
-    $sendCacheHeaders = true;
+    $send = true;
     if (isset($_SERVER['HTTP_PRAGMA']) && strpos($_SERVER['HTTP_PRAGMA'], 'no-cache') !== false) {
-        $sendCacheHeaders = false;
+        $send = false;
     } elseif (isset($_SERVER['HTTP_CACHE_CONTROL']) && strpos($_SERVER['HTTP_CACHE_CONTROL'], 'no-cache') !== false) {
-        $sendCacheHeaders = false;
+        $send = false;
     }
 
-    if ($sendCacheHeaders) {
+    if ($send) {
         cacheHeaders($config);
+    }
+}
+
+/**
+ * Send error message
+ *
+ * @param int $code
+ */
+function sendError($code) {
+    http_response_code($code);
+    switch ($code) {
+        case 400:
+            echo 'Bad request';
+            break;
+
+        case 404:
+            echo 'Invalid URL';
+            break;
     }
 }
 
@@ -103,16 +129,21 @@ if (count($url_parts) !== 2) {
         $data = json_decode($package, true);
         $version = $data['version'];
         echo 'SimpleSVG CDN version ', $version, ' (PHP';
-        foreach(['region'] as $attr) {
-            $value = getenv($attr);
-            if ($value !== false) {
-                echo ', ', $value;
+
+        // Try to get region
+        $value = getenv('region');
+        if ($value !== false) {
+            echo ', ', $value;
+        } else {
+            if (@file_exists(dirname(__FILE__) . '/region.txt')) {
+                echo ', ', trim(file_get_contents(dirname(__FILE__) . '/region.txt'));
             }
         }
+
         echo ')';
         exit(0);
     }
-    http_response_code(404);
+    sendError(404);
     exit(0);
 }
 
@@ -150,20 +181,21 @@ $registry = new SimpleSVG\CDN\CollectionsRegistry($config['cache-dir'], function
 });
 $collection = $registry->getCollection($url_parts[0]);
 if ($collection === null) {
-    http_response_code(404);
+    sendError(404);
     exit(0);
 }
 
 // Parse request
 $result = SimpleSVG\CDN\Parser::parse($collection, $url_parts[1], $_GET);
 if (is_numeric($result)) {
-    http_response_code($result);
+    sendError($result);
     exit(0);
 }
 
 // Send response
-sendCacheHeaders();
+sendCacheHeaders($config);
 
 header('Content-Type: ' . $result['type']);
+header('ETag: ' . md5($result['body']));
 echo $result['body'];
 exit(0);

@@ -1,4 +1,5 @@
 .idea
+region.txt
 cache/*.php
 vendor
 composer.phar
