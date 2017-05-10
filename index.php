@@ -5,12 +5,10 @@ include('vendor/autoload.php');
 
 $config = [
     // Cache timeout
-    // 'cache' => 2592000, // 30 days
-    'cache' => 3600, // 1 hour
+    'cache' => 604800, // 1 week
 
     // Minimum cache time, 0 if none
-    // 'cache-min' => 86400, // 24 hours
-    'cache-min' => 3600, // 1 hour
+    'cache-min' => 86400, // 24 hours
 
     // True if cache is private
     'cache-private' => false,
@@ -192,10 +190,21 @@ if (is_numeric($result)) {
     exit(0);
 }
 
+// Get collection cache time
+$time = $registry->getCollectionCacheTime($url_parts[0]);
+if (!$time) {
+    $time = $registry->getCollectionTime($url_parts[0]);
+}
+if ($time) {
+    header('Last-Modified: ' . gmdate('D, d M Y H:i:s T', $time));
+}
+
 // Send response
 sendCacheHeaders($config);
 
 header('Content-Type: ' . $result['type']);
 header('ETag: ' . md5($result['body']));
+
+
 echo $result['body'];
 exit(0);
