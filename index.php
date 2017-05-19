@@ -205,6 +205,10 @@ sendCacheHeaders($config);
 header('Content-Type: ' . $result['type']);
 header('ETag: ' . md5($result['body']));
 
+// Check for download
+if (isset($result['filename']) && isset($_GET['download']) && ($_GET['download'] === '1' || $_GET['download'] === 'true')) {
+	header('Content-Disposition: attachment; filename="' . $result['filename'] . '"');
+}
 
 echo $result['body'];
 exit(0);
