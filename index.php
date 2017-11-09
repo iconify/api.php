@@ -113,37 +113,49 @@ $url = substr($url, strlen($prefix));
 $url = explode('?', $url);
 $url = $url[0];
 
-$url_parts = explode('/', $url);
-if (count($url_parts) !== 2) {
-    if ($url === '') {
-        // Index
-        http_response_code(301);
-        header('Location: https://simplesvg.com/');
-        exit(0);
-    }
-    if ($url === 'version') {
-        // Send version response
-        $package = file_get_contents(dirname(__FILE__) . '/composer.json');
-        $data = json_decode($package, true);
-        $version = $data['version'];
-        echo 'SimpleSVG CDN version ', $version, ' (PHP';
+if ($url === '') {
+    // Index
+    http_response_code(301);
+    header('Location: https://simplesvg.com/');
+    exit(0);
+}
 
-        // Try to get region
-        $value = getenv('region');
-        if ($value !== false) {
-            echo ', ', $value;
-        } else {
-            if (@file_exists(dirname(__FILE__) . '/region.txt')) {
-                $region = trim(file_get_contents(dirname(__FILE__) . '/region.txt'));
-                if (strlen($region) <= 10 && preg_match('/^[a-z0-9_-]+$/', $region)) {
-                    echo ', ', $region;
-                }
+if ($url === 'version') {
+    // Send version response
+    $package = file_get_contents(dirname(__FILE__) . '/composer.json');
+    $data = json_decode($package, true);
+    $version = $data['version'];
+    echo 'SimpleSVG CDN version ', $version, ' (PHP';
+
+    // Try to get region
+    $value = getenv('region');
+    if ($value !== false) {
+        echo ', ', $value;
+    } else {
+        if (@file_exists(dirname(__FILE__) . '/region.txt')) {
+            $region = trim(file_get_contents(dirname(__FILE__) . '/region.txt'));
+            if (strlen($region) <= 10 && preg_match('/^[a-z0-9_-]+$/', $region)) {
+                echo ', ', $region;
             }
         }
-
-        echo ')';
-        exit(0);
     }
+
+    echo ')';
+    exit(0);
+
+}
+
+// Split URL parts
+$url_parts = explode('.', $url);
+if (count($url_parts) !== 2) {
+    sendError(404);
+    exit(0);
+}
+$ext = $url_parts[1];
+$url_parts = explode('/', $url_parts[0]);
+
+// Exit if wrong extension or too many URL parts
+if (!in_array($ext, ['json', 'js', 'svg']) || count($url_parts) > 2) {
     sendError(404);
     exit(0);
 }
@@ -187,7 +199,7 @@ if ($collection === null) {
 }
 
 // Parse request
-$result = SimpleSVG\CDN\Parser::parse($collection, $url_parts[1], $_GET);
+$result = SimpleSVG\CDN\Parser::parseQuery($collection, $url_parts, $ext, $_GET);
 if (is_numeric($result)) {
     sendError($result);
     exit(0);
