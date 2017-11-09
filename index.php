@@ -134,7 +134,10 @@ if (count($url_parts) !== 2) {
             echo ', ', $value;
         } else {
             if (@file_exists(dirname(__FILE__) . '/region.txt')) {
-                echo ', ', trim(file_get_contents(dirname(__FILE__) . '/region.txt'));
+                $region = trim(file_get_contents(dirname(__FILE__) . '/region.txt'));
+                if (strlen($region) <= 10 && preg_match('/^[a-z0-9_-]+$/', $region)) {
+                    echo ', ', $region;
+                }
             }
         }
 
