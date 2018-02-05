@@ -1,10 +1,10 @@
 {
 	"name": "simple-svg/website-icons",
 	"description": "Source for icons.simplesvg.com",
-	"version": "1.0.0-beta1",
+	"version": "1.0.0-beta2",
 	"type": "project",
 	"license": "MIT",
-	"homepage": "https://icons.simplesvg.com/",
+	"homepage": "https://simplesvg.com/",
 	"require": {
 		"php": ">=5.6",
 		"simple-svg/icons": "*"
