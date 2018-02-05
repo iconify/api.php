@@ -5,15 +5,9 @@
 	"type": "project",
 	"license": "MIT",
 	"homepage": "https://icons.simplesvg.com/",
-	"repositories": [
-		{
-			"type": "vcs",
-			"url": "git@github.com:simplesvg/icons.git"
-		}
-	],
 	"require": {
 		"php": ">=5.6",
-		"simple-svg/icons": "dev-master"
+		"simple-svg/icons": "*"
 	},
 	"require-dev": {
 		"phpunit/phpunit": "*"
