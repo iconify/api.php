@@ -1,6 +1,7 @@
 bin
 .idea
-region.txt
+.DS_Store
+config.json
 cache/*.php
 vendor
 composer.phar

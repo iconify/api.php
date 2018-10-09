@@ -2,22 +2,25 @@
 
 include('vendor/autoload.php');
 
-$config = [
-    // True if default icons set should be served
-    'serve-default-icons'   => true,
-
-    // Directories with json files for custom icon sets
-    // Use simple-svg-tools node.js package to create json collections
-    'custom-icons-dirs'  => [dirname(__FILE__) . '/json'],
-
-    // Cache configuration
-    'cache' => 604800, // cache time in seconds
-    'cache-min' => 86400, // minimum cache refresh time in seconds
-    'cache-private' => false, // True if cache is private. Used in Cache-Control header in response
-
-    // Local cache directory, empty string if none
-    'cache-dir' => dirname(__FILE__) . '/cache',
-];
+// Load config
+$config = json_decode(file_get_contents(__DIR__ . '/config-default.json'), true);
+$customConfig = @file_get_contents(__DIR__ . '/config.json');
+if ($customConfig) {
+    $customConfig = json_decode($customConfig, true);
+    foreach ($customConfig as $key => $value) {
+        if (!isset($config[$key])) {
+            continue;
+        }
+        if (is_object($config[$key])) {
+            // Merge objects
+            foreach ($customConfig[$key] as $key2 => $value2) {
+                $config[$key][$key2] = $value2;
+            }
+        } else {
+            $config[$key] = $customConfig[$key];
+        }
+    }
+}
 
 /**
  * Check cache headers
@@ -26,11 +29,14 @@ $config = [
  */
 function cacheHeaders($config)
 {
-    header('Cache-Control: ' . (empty($config['cache-private']) ? 'public' : 'private') .
-        ', max-age=' . $config['cache'] .
-        (empty($config['cache-min']) ? '' : ', min-refresh=' . $config['cache-min'])
+    if (!$config['cache'] || !$config['cache']['timeout']) {
+        return;
+    }
+    header('Cache-Control: ' . (empty($config['cache']['private']) ? 'public' : 'private') .
+        ', max-age=' . $config['cache']['timeout'] .
+        (empty($config['cache']['min-refresh']) ? '' : ', min-refresh=' . $config['cache']['min-refresh'])
     );
-    if (empty($config['cache-private'])) {
+    if (empty($config['cache']['private'])) {
         header('Pragma: cache');
     }
 }
@@ -86,7 +92,7 @@ function parseRequest($prefix, $query, $ext)
     global $config;
 
     // Init registry
-    $registry = new SimpleSVG\WebsiteIcons\Registry($config['cache-dir'], function() use ($config) {
+    $registry = new SimpleSVG\WebsiteIcons\Registry(str_replace('{dir}', __DIR__, $config['cache-dir']), function() use ($config) {
         $collections = [];
 
         // Add premade collections
@@ -98,7 +104,7 @@ function parseRequest($prefix, $query, $ext)
         }
 
         foreach ($config['custom-icons-dirs'] as $dir) {
-            $res = @opendir($dir);
+            $res = @opendir(str_replace('{dir}', __DIR__, $dir));
             if ($res !== null) {
                 while (($file = readdir($res)) !== false) {
                     $dot = substr($file, 0, 1);
@@ -156,20 +162,20 @@ function parseRequest($prefix, $query, $ext)
 }
 
 // Check Origin
-if (isset($_SERVER['HTTP_ORIGIN'])) {
-    header('Access-Control-Allow-Origin: ' . $_SERVER['HTTP_ORIGIN']);
+if (isset($_SERVER['HTTP_ORIGIN']) && $config['cors']) {
+    header('Access-Control-Allow-Origin: ' . $config['cors']['origins']);
     header('Access-Control-Allow-Credentials: true');
-    header('Access-Control-Max-Age: ' . $config['cache']); // 30 days
+    header('Access-Control-Max-Age: ' . $config['cors']['timeout']);
 }
 
 // Access-Control headers are received during OPTIONS requests
 if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
     if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD'])) {
-        header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+        header('Access-Control-Allow-Methods: ' . $config['cors']['methods']);
     }
 
     if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS'])) {
-        header('Access-Control-Allow-Headers: ' . $_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']);
+        header('Access-Control-Allow-Headers: ' . $config['cors']['headers']);
     }
 
     cacheHeaders($config);
@@ -179,7 +185,7 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] == 'OPTIONS'
 // Check for cache header
 if (!empty($_SERVER['HTTP_IF_MODIFIED_SINCE'])) {
     $time = @strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']);
-    if (!$time || $time > time() - $config['cache']) {
+    if ($config['cache'] && (!$time || $time > time() - $config['cache']['timeout'])) {
         http_response_code(304);
         exit(0);
     }
@@ -196,7 +202,7 @@ $url = $url[0];
 if ($url === '') {
     // Index
     http_response_code(301);
-    header('Location: https://simplesvg.com/');
+    header('Location: ' . $config['index-page']);
     exit(0);
 }
 
@@ -208,16 +214,14 @@ if ($url === 'version') {
     echo 'SimpleSVG CDN version ', $version, ' (PHP';
 
     // Try to get region
-    $value = getenv('region');
-    if ($value !== false) {
-        echo ', ', $value;
-    } else {
-        if (@file_exists(dirname(__FILE__) . '/region.txt')) {
-            $region = trim(file_get_contents(dirname(__FILE__) . '/region.txt'));
-            if (strlen($region) <= 10 && preg_match('/^[a-z0-9_-]+$/', $region)) {
-                echo ', ', $region;
-            }
+    if ($config['env-region']) {
+        $value = getenv('region');
+        if ($value !== false) {
+            $config['region'] = $value;
         }
+    }
+    if ($config['region'] !== '') {
+        echo ', ', $config['region'];
     }
 
     echo ')';

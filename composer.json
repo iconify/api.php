@@ -6,11 +6,11 @@
 	"license": "MIT",
 	"homepage": "https://simplesvg.com/",
 	"require": {
-		"php": ">=5.6",
-		"simple-svg/icons": "*"
+		"php": ">=5.6"
 	},
 	"require-dev": {
-		"phpunit/phpunit": "*"
+		"phpunit/phpunit": "*",
+		"simple-svg/icons": "dev-master"
 	},
 	"config": {
 		"bin-dir": "bin"
