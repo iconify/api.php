@@ -1,9 +1,7 @@
 {
   "region": "",
   "env-region": true,
-  "custom-icons-dirs": [
-    "{dir}/json"
-  ],
+  "custom-icons-dir": "{dir}/json",
   "serve-default-icons": true,
   "index-page": "https://simplesvg.com/",
   "cache": {
@@ -16,6 +14,15 @@
     "timeout": 86400,
     "methods": "GET, OPTIONS",
     "headers": "Origin, X-Requested-With, Content-Type, Accept, Accept-Encoding"
+  },
+  "sync": {
+    "versions": "{dir}/git-repos/versions.json",
+    "storage": "{dir}/git-repos",
+    "git": "git clone {repo} --depth 1 --no-tags {target}",
+    "secret": "",
+    "simple-svg": "git@github.com:simplesvg/icons.git",
+    "custom": "",
+    "custom-dir": ""
   },
   "cache-dir": "{dir}/cache"
 }

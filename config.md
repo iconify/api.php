@@ -24,9 +24,9 @@ To check which server you are connected to, open /version in browser.
 
 If true, script will check for environment variable "REGION" and if it is set, it will overwrite configuration option "region"
 
-#### custom-icon-dirs
+#### custom-icons-dir
 
-List of directories with custom json files. By default list contains only directory "json".
+Directory with custom json files.
 
 Use {dir} variable to specify application's directory.
 
@@ -60,3 +60,51 @@ Minimum page refresh timeout. Usually same as "timeout" value.
 #### private
 
 Set to true if page cache should be treated as private.
+
+
+## Synchronizing icon sets with Git
+
+Server can pull collections from Git service. This can be used to push collections to server whenever its updated without manual work.
+
+There are two collections available: simple-svg and custom.
+
+All configuration options are in "sync" object in config-default.json. Use {dir} variable in directories to point to application directory.
+
+To synchronize repository send GET request to /sync?repo=simple-svg&key=your-sync-key
+Replace repo with "custom" to synchronize custom repository and key with value of sync.secret
+
+Server will respond identically with empty message regardless of status to prevent visitors from trying to guess your secret key. There is small delay in response.
+
+Sync function is meant to be used with GitHub web hooks function.
+
+#### secret
+
+Secret key. String. This is required configuration option. Put it in config.json, not config-default.json to make sure its not commited by mistake.
+
+If "secret" is not set, entire synchronization module is disabled.
+
+#### versions
+
+Location of versions.json file that stores information about latest synchronized repositories.
+
+#### storage
+
+Location of directory where repositories will be stored.
+
+#### git
+
+Git command. You can change it if you need to customize command that is executed to clone repository. {repo} will be replaced with repository URL, {target} will be replaced with target directory.
+
+#### simple-svg
+
+URL of SimpleSVG icons repository.
+
+#### custom
+
+URL of custom icons repository.
+
+#### custom-dir
+
+Location of json files in custom repository, relative to root directory of repository.
+
+For example, if json files are located in directory "json" in your repository (like they are in simple-svg repository), set custom-dir value to "json".

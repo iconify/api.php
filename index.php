@@ -11,7 +11,7 @@ if ($customConfig) {
         if (!isset($config[$key])) {
             continue;
         }
-        if (is_object($config[$key])) {
+        if (is_array($config[$key])) {
             // Merge objects
             foreach ($customConfig[$key] as $key2 => $value2) {
                 $config[$key][$key2] = $value2;
@@ -93,35 +93,8 @@ function parseRequest($prefix, $query, $ext)
 
     // Init registry
     $registry = new SimpleSVG\WebsiteIcons\Registry(str_replace('{dir}', __DIR__, $config['cache-dir']), function() use ($config) {
-        $collections = [];
-
-        // Add premade collections
-        if ($config['serve-default-icons']) {
-            $list = \SimpleSVG\Icons\Finder::collections();
-            foreach ($list as $key => $data) {
-                $collections[$key] = \SimpleSVG\Icons\Finder::locate($key);
-            }
-        }
-
-        foreach ($config['custom-icons-dirs'] as $dir) {
-            $res = @opendir(str_replace('{dir}', __DIR__, $dir));
-            if ($res !== null) {
-                while (($file = readdir($res)) !== false) {
-                    $dot = substr($file, 0, 1);
-                    if ($dot === '.' || $dot === '_') {
-                        continue;
-                    }
-                    $list = explode('.', $file);
-                    if (count($list) !== 2 || $list[1] !== 'json') {
-                        continue;
-                    }
-                    $collections[$list[0]] = $dir . '/' . $file;
-                }
-                closedir($res);
-            }
-        }
-
-        return $collections;
+        $repos = new \SimpleSVG\WebsiteIcons\Repositories($config, __DIR__);
+        return $repos->locateCollections();
     });
 
     // Find collection
@@ -208,7 +181,7 @@ if ($url === '') {
 
 if ($url === 'version') {
     // Send version response
-    $package = file_get_contents(dirname(__FILE__) . '/composer.json');
+    $package = file_get_contents(__DIR__ . '/composer.json');
     $data = json_decode($package, true);
     $version = $data['version'];
     echo 'SimpleSVG CDN version ', $version, ' (PHP';
@@ -225,6 +198,32 @@ if ($url === 'version') {
     }
 
     echo ')';
+    exit(0);
+}
+
+if ($url === 'sync') {
+    // Synchronize repository
+    if (!isset($_REQUEST['repo']) || !isset($_REQUEST['key'])) {
+        sendError(400);
+        exit(0);
+    }
+
+    $start = time();
+    if (!isset($config['sync']) || empty($config['sync']['secret']) || $_REQUEST['key'] !== $config['sync']['secret']) {
+        $result = false;
+    } else {
+        $sync = new \SimpleSVG\WebsiteIcons\Sync($config, __DIR__);
+        $result = $sync->sync($_REQUEST['repo']);
+    }
+
+    // PHP cannot send response and then do stuff, so fake doing stuff few seconds
+    $limit = 15;
+    $end = time();
+    $diff = $end - $start;
+    if ($diff < $limit) {
+        sleep($limit - $diff);
+    }
+
     exit(0);
 }
 

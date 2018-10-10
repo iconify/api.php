@@ -6,3 +6,6 @@ cache/*.php
 vendor
 composer.phar
 composer.lock
+/git-repos/*
+!/git-repos/.htaccess
+!/git-repos/index.php

@@ -1,7 +1,7 @@
 {
 	"name": "simple-svg/website-icons",
-	"description": "Source for icons.simplesvg.com",
-	"version": "1.0.0-beta2",
+	"description": "PHP version of icons.simplesvg.com",
+	"version": "1.0.0-beta3",
 	"type": "project",
 	"license": "MIT",
 	"homepage": "https://simplesvg.com/",
