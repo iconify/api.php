@@ -25,4 +25,6 @@ Node.js version of server is faster because it loads everything only once on sta
 
 PHP process ends when HTTP request ends, so PHP has to reload lots of things for each request. PHP version has caching to minimize loading times, but it is still nowhere near as fast as Node.js version. The only upside of PHP version is it is easy to setup - simply upload files and you are done.
 
-Use Node.js version if you can for better performance.
+Node.js version has one feature that PHP version does not have: ability to send errors by email.
+
+Use Node.js version if you can for better performance and better error reporting.
