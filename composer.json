@@ -10,7 +10,7 @@
 	},
 	"require-dev": {
 		"phpunit/phpunit": "*",
-		"simple-svg/icons": "dev-master"
+		"simple-svg/icons": "*"
 	},
 	"config": {
 		"bin-dir": "bin"
