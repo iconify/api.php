@@ -245,6 +245,10 @@ class SVG {
         if (count($transformations)) {
             $body = '<g transform="' . implode(' ', $transformations) . '">' . $body . '</g>';
         }
+        if (isset($props['box']) && ($props['box'] === true || $props['box'] === 'true' || $props['box'] === '1')) {
+            // Add transparent bounding box
+            $body .= '<rect x="' . $box['left'] . '" y="' . $box['top'] . '" width="' . $box['width'] . '" height="' . $box['height'] . '" fill="rgba(0, 0, 0, 0)" />';
+        }
 
         $svg = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"';
         foreach ($attributes as $attr => $value) {
