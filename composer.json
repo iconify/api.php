@@ -6,11 +6,11 @@
 	"license": "MIT",
 	"homepage": "https://simplesvg.com/",
 	"require": {
-		"php": ">=5.6"
+		"php": ">=5.6",
+		"simple-svg/icons": "^2.0"
 	},
 	"require-dev": {
-		"phpunit/phpunit": "*",
-		"simple-svg/icons": "*"
+		"phpunit/phpunit": "*"
 	},
 	"config": {
 		"bin-dir": "bin"
@@ -19,5 +19,7 @@
 		"psr-4": {
 			"SimpleSVG\\WebsiteIcons\\": "lib"
 		}
-	}
+	},
+	"minimum-stability": "dev",
+	"prefer-stable": true
 }
