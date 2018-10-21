@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file is part of the simple-svg/website-icons package.
+ * This file is part of the iconify/api package.
  *
  * (c) Vjacheslav Trushkin <cyberalien@gmail.com>
  *
@@ -10,7 +10,7 @@
  * @license MIT
  */
 
-namespace SimpleSVG\WebsiteIcons;
+namespace Iconify\API;
 
 class Registry {
     /**
@@ -120,7 +120,7 @@ class Registry {
      */
     protected function _saveCache($filename)
     {
-        $content = "<?php \nif (!class_exists('\\\\SimpleSVG\\\\WebsiteIcons\\\\Registry', false)) { die(); }\n
+        $content = "<?php \nif (!class_exists('\\\\Iconify\\\\API\\\\Registry', false)) { die(); }\n
             \$cache_file = " . var_export($filename, true) . ";
             \$cache_version = " . var_export(self::$_version, true) . ";
             \$cached_collections = " . var_export($this->_collections, true) . ";

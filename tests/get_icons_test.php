@@ -1,6 +1,6 @@
 <?php
 
-use \SimpleSVG\WebsiteIcons\Collection;
+use \Iconify\API\Collection;
 
 class GetIconsTest extends \PHPUnit\Framework\TestCase {
     public function testSeveralIcons()

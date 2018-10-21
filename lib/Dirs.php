@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file is part of the simple-svg/website-icons package.
+ * This file is part of the iconify/api package.
  *
  * (c) Vjacheslav Trushkin <cyberalien@gmail.com>
  *
@@ -10,9 +10,9 @@
  * @license MIT
  */
 
-namespace SimpleSVG\WebsiteIcons;
+namespace Iconify\API;
 
-use \SimpleSVG\Icons\Finder;
+use \Iconify\IconsJSON\Finder;
 
 class Dirs {
     protected static $_instance = null;
@@ -55,7 +55,7 @@ class Dirs {
 
         // Setup default directories
         if (!empty($config['serve-default-icons'])) {
-            $this->_dirs['simple-svg'] = Finder::rootDir();
+            $this->_dirs['iconify'] = Finder::rootDir();
         }
 
         if (!empty($config['custom-icons-dir'])) {
@@ -137,7 +137,7 @@ class Dirs {
     public function iconsDir($repo)
     {
         switch ($repo) {
-            case 'simple-svg':
+            case 'iconify':
                 $dir = $this->rootDir($repo);
                 return $dir === '' ? '' : $dir . '/json';
 

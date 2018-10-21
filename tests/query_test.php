@@ -1,7 +1,7 @@
 <?php
 
-use \SimpleSVG\WebsiteIcons\Query;
-use \SimpleSVG\WebsiteIcons\Collection;
+use \Iconify\API\Query;
+use \Iconify\API\Collection;
 
 class QueryTest extends \PHPUnit\Framework\TestCase {
     protected $_collection1;
@@ -60,7 +60,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase {
     {
         $this->assertEquals([
             'type'  => 'application/javascript; charset=utf-8',
-            'body'  => 'SimpleSVG._loaderCallback({"prefix":"test","icons":{"icon2":{"body":"<icon2 \\/>","width":24,"height":24}},"aliases":{"alias1":{"parent":"icon2","hFlip":true}}})'
+            'body'  => 'Iconify._loaderCallback({"prefix":"test","icons":{"icon2":{"body":"<icon2 \\/>","width":24,"height":24}},"aliases":{"alias1":{"parent":"icon2","hFlip":true}}})'
         ], Query::parse($this->_collection1, 'icons', 'js', [
             'icons' => 'alias1'
         ]));
@@ -106,7 +106,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase {
             'color' => 'red',
             'rotate'    => '90deg'
         ]);
-        $result = preg_replace('/SimpleSVGId-[0-9a-f]+-[0-9a-f]+-[0-9]+/', 'some-id', $result['body']);
+        $result = preg_replace('/IconifyId-[0-9a-f]+-[0-9a-f]+-[0-9]+/', 'some-id', $result['body']);
         $this->assertEquals('<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1em" height="1em" style="-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg);" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g transform="rotate(90 12 12)"><defs><foo id="some-id" /></defs><bar use="url(#some-id)" fill="red" stroke="red" /></g></svg>', $result);
     }
 }

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file is part of the simple-svg/website-icons package.
+ * This file is part of the iconify/api package.
  *
  * (c) Vjacheslav Trushkin <cyberalien@gmail.com>
  *
@@ -10,7 +10,7 @@
  * @license MIT
  */
 
-namespace SimpleSVG\WebsiteIcons;
+namespace Iconify\API;
 
 class SVG {
     /**
@@ -368,7 +368,7 @@ class SVG {
         }
 
         $counter = 0;
-        $prefix = 'SimpleSVGId-' . dechex(time()) . '-' . $random . '-';
+        $prefix = 'IconifyId-' . dechex(time()) . '-' . $random . '-';
         foreach ($ids as $id) {
             $counter ++;
             $newID = $prefix . $counter;

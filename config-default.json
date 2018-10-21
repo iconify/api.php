@@ -3,7 +3,7 @@
   "env-region": true,
   "custom-icons-dir": "{dir}/json",
   "serve-default-icons": true,
-  "index-page": "https://simplesvg.com/",
+  "index-page": "https://iconify.design/",
   "cache": {
     "timeout": 604800,
     "min-refresh": 604800,
@@ -20,7 +20,7 @@
     "storage": "{dir}/git-repos",
     "git": "git clone {repo} --depth 1 --no-tags {target}",
     "secret": "",
-    "simple-svg": "git@github.com:simplesvg/icons.git",
+    "iconify": "git@github.com:iconify-design/collections-json.git",
     "custom": "",
     "custom-dir": ""
   },

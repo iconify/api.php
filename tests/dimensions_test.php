@@ -1,6 +1,6 @@
 <?php
 
-use \SimpleSVG\WebsiteIcons\SVG;
+use \Iconify\API\SVG;
 
 class DimensionsTest extends \PHPUnit\Framework\TestCase {
     public function testNumbers()

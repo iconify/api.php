@@ -92,8 +92,8 @@ function parseRequest($prefix, $query, $ext)
     global $config;
 
     // Init registry
-    $registry = new SimpleSVG\WebsiteIcons\Registry(str_replace('{dir}', __DIR__, $config['cache-dir']), function() use ($config) {
-        $repos = new \SimpleSVG\WebsiteIcons\Repositories($config, __DIR__);
+    $registry = new Iconify\API\Registry(str_replace('{dir}', __DIR__, $config['cache-dir']), function() use ($config) {
+        $repos = new \Iconify\API\Repositories($config, __DIR__);
         return $repos->locateCollections();
     });
 
@@ -105,7 +105,7 @@ function parseRequest($prefix, $query, $ext)
     }
 
     // Parse query
-    $result = \SimpleSVG\WebsiteIcons\Query::parse($collection, $query, $ext, $_GET);
+    $result = \Iconify\API\Query::parse($collection, $query, $ext, $_GET);
 
     if (is_numeric($result)) {
         sendError($result);
@@ -184,7 +184,7 @@ if ($url === 'version') {
     $package = file_get_contents(__DIR__ . '/composer.json');
     $data = json_decode($package, true);
     $version = $data['version'];
-    echo 'SimpleSVG CDN version ', $version, ' (PHP';
+    echo 'Iconify API version ', $version, ' (PHP';
 
     // Try to get region
     if ($config['env-region']) {
@@ -212,7 +212,7 @@ if ($url === 'sync') {
     if (!isset($config['sync']) || empty($config['sync']['secret']) || $_REQUEST['key'] !== $config['sync']['secret']) {
         $result = false;
     } else {
-        $sync = new \SimpleSVG\WebsiteIcons\Sync($config, __DIR__);
+        $sync = new \Iconify\API\Sync($config, __DIR__);
         $result = $sync->sync($_REQUEST['repo']);
     }
 

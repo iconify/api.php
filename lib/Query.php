@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file is part of the simple-svg/website-icons package.
+ * This file is part of the iconify/api package.
  *
  * (c) Vjacheslav Trushkin <cyberalien@gmail.com>
  *
@@ -10,7 +10,7 @@
  * @license MIT
  */
 
-namespace SimpleSVG\WebsiteIcons;
+namespace Iconify\API;
 
 class Query {
     /**
@@ -21,6 +21,7 @@ class Query {
      * @param string $ext
      * @param array $params
      * @return int|array
+     * @throws \Exception
      */
     public static function parse($collection, $query, $ext, $params)
     {
@@ -63,7 +64,7 @@ class Query {
                         }
                         $callback = $params['callback'];
                     } else {
-                        $callback = 'SimpleSVG._loaderCallback';
+                        $callback = 'Iconify._loaderCallback';
                     }
                     return [
                         'type'  => 'application/javascript; charset=utf-8',

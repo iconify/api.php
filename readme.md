@@ -1,6 +1,6 @@
-# SimpleSVG icons website
+# Iconify.design API
 
-This code runs on icons.simplesvg.com that is used to serve collections and SVG images.
+This code runs on api.iconify.design that is used to serve collections and SVG images.
 
 Make sure your server matches requirements below:
 
@@ -9,7 +9,7 @@ Make sure your server matches requirements below:
 * Files must be writable by same user that runs PHP scripts to allow writing to "cache" and "git-repos" directories.
 * If you are using function to synchronize repositories, make sure Git is installed and is accessable from command line.
 
-Node.js version is available at https://github.com/simplesvg/website-icons.js
+Node.js version is available at https://github.com/iconify-design/api.js
 
 
 ### How to use it

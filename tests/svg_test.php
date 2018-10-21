@@ -1,6 +1,6 @@
 <?php
 
-use \SimpleSVG\WebsiteIcons\SVG;
+use \Iconify\API\SVG;
 
 class SVGTest extends \PHPUnit\Framework\TestCase {
     protected function addMissingAttributes($data)

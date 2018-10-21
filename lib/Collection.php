@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file is part of the simple-svg/website-icons package.
+ * This file is part of the iconify/api package.
  *
  * (c) Vjacheslav Trushkin <cyberalien@gmail.com>
  *
@@ -10,7 +10,7 @@
  * @license MIT
  */
 
-namespace SimpleSVG\WebsiteIcons;
+namespace Iconify\API;
 
 class Collection {
     /**
@@ -191,7 +191,7 @@ class Collection {
         if (!$this->loaded) {
             return;
         }
-        $content = "<?php \nif (!class_exists('\\\\SimpleSVG\\\\WebsiteIcons\\\\Collection', false)) { die(); }\n
+        $content = "<?php \nif (!class_exists('\\\\Iconify\\\\API\\\\Collection', false)) { die(); }\n
             \$cache_file = " . var_export($filename, true) . ";
             \$cache_time = " . var_export($fileTime, true) . ";
             \$cache_version = " . var_export(self::$_version, true) . ";
