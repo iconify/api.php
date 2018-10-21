@@ -60,7 +60,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase {
     {
         $this->assertEquals([
             'type'  => 'application/javascript; charset=utf-8',
-            'body'  => 'Iconify._loaderCallback({"prefix":"test","icons":{"icon2":{"body":"<icon2 \\/>","width":24,"height":24}},"aliases":{"alias1":{"parent":"icon2","hFlip":true}}})'
+            'body'  => 'SimpleSVG._loaderCallback({"prefix":"test","icons":{"icon2":{"body":"<icon2 \\/>","width":24,"height":24}},"aliases":{"alias1":{"parent":"icon2","hFlip":true}}})'
         ], Query::parse($this->_collection1, 'icons', 'js', [
             'icons' => 'alias1'
         ]));

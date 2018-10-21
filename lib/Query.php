@@ -64,7 +64,7 @@ class Query {
                         }
                         $callback = $params['callback'];
                     } else {
-                        $callback = 'Iconify._loaderCallback';
+                        $callback = 'SimpleSVG._loaderCallback';
                     }
                     return [
                         'type'  => 'application/javascript; charset=utf-8',
