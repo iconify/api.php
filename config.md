@@ -32,7 +32,7 @@ Use {dir} variable to specify application's directory.
 
 #### serve-default-icons
 
-True if default SimpleSVG icons set should be served.
+True if default Iconify icons set should be served.
 
 #### index-page
 
