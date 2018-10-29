@@ -191,13 +191,13 @@ class Collection {
         if (!$this->loaded) {
             return;
         }
-        $content = "<?php \nif (!class_exists('\\\\Iconify\\\\API\\\\Collection', false)) { die(); }\n
+        $content = "<?php \nif (class_exists('\\\\Iconify\\\\API\\\\Collection', false)) { \n
             \$cache_file = " . var_export($filename, true) . ";
             \$cache_time = " . var_export($fileTime, true) . ";
             \$cache_version = " . var_export(self::$_version, true) . ";
             \$cached_prefix = " . var_export($this->prefix, true) . ";
             \$cached_items = " . var_export($this->_items, true) . ";
-        ";
+        }";
         file_put_contents($filename, $content);
         @chmod($filename, 0644);
     }
