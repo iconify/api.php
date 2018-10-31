@@ -12,6 +12,8 @@
 
 namespace Iconify\API;
 
+use \Iconify\JSONTools\Collection;
+
 class Registry {
     /**
      * @var int Version number used to bust old cache
@@ -69,7 +71,7 @@ class Registry {
         }
 
         $collection = new Collection($prefix);
-        $collection->loadFromFile($this->_collections[$prefix], $this->_cacheDir ? $this->_cacheDir . '/collection-' . self::$_version . '-' . $prefix . '.php' : null);
+        $collection->loadFromFile($this->_collections[$prefix], null, $this->_cacheDir ? $this->_cacheDir . '/collection-' . self::$_version . '-' . $prefix . '.php' : null);
         return $collection;
     }
 
@@ -120,11 +122,11 @@ class Registry {
      */
     protected function _saveCache($filename)
     {
-        $content = "<?php \nif (!class_exists('\\\\Iconify\\\\API\\\\Registry', false)) { die(); }\n
+        $content = "<?php \nif (class_exists('\\\\Iconify\\\\API\\\\Registry', false)) { \n
             \$cache_file = " . var_export($filename, true) . ";
             \$cache_version = " . var_export(self::$_version, true) . ";
             \$cached_collections = " . var_export($this->_collections, true) . ";
-        ";
+        }";
         file_put_contents($filename, $content);
         @chmod($filename, 0644);
     }

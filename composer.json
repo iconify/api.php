@@ -6,7 +6,8 @@
 	"homepage": "https://iconify.design/",
 	"require": {
 		"php": ">=5.6",
-		"iconify/json": "*"
+		"iconify/json": "*",
+		"iconify/json-tools": "*"
 	},
 	"require-dev": {
 		"phpunit/phpunit": "*"

@@ -1,7 +1,7 @@
 <?php
 
 use \Iconify\API\Query;
-use \Iconify\API\Collection;
+use \Iconify\JSONTools\Collection;
 
 class QueryTest extends \PHPUnit\Framework\TestCase {
     protected $_collection1;

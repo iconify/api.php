@@ -12,6 +12,9 @@
 
 namespace Iconify\API;
 
+use \Iconify\JSONTools\Collection;
+use \Iconify\JSONTools\SVG;
+
 class Query {
     /**
      * Generate data for query
@@ -21,7 +24,6 @@ class Query {
      * @param string $ext
      * @param array $params
      * @return int|array
-     * @throws \Exception
      */
     public static function parse($collection, $query, $ext, $params)
     {
@@ -29,12 +31,12 @@ class Query {
             case 'svg':
                 // Generate SVG
                 // query = icon name
-                $icon = $collection->getIcon($query);
+                $icon = $collection->getIconData($query);
                 if ($icon === null) {
                     return 404;
                 }
                 $svg = new SVG($icon);
-                $body = $svg->parse($params);
+                $body = $svg->getSVG($params);
                 return [
                     'filename'  => $query . '.svg',
                     'type'  => 'image/svg+xml; charset=utf-8',
@@ -49,13 +51,13 @@ class Query {
 
                 $result = $collection->getIcons(explode(',', $params['icons']));
 
-                if (empty($result['icons'])) {
+                if ($result === null || empty($result['icons'])) {
                     return 404;
                 }
-                if (empty($result['aliases'])) {
+                if (isset($result['aliases']) && empty($result['aliases'])) {
                     unset($result['aliases']);
                 }
-                $result = json_encode($result, JSON_FORCE_OBJECT);
+                $result = json_encode($result);
 
                 if ($ext === 'js') {
                     if (isset($params['callback'])) {
@@ -78,7 +80,6 @@ class Query {
 
             default:
                 return 404;
-
         }
     }
 }
