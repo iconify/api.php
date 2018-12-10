@@ -16,7 +16,7 @@ Node.js version is available at https://github.com/iconify-design/api.js
 
 Upload files in root directory of your website. Icons server requires its own domain or sub-domain.
 
-File config.json is the same as config-default.json, but contains only values you have customized. See [config.md](config.md)
+Add custom configuration to config.php. Default configuration is available as reference in config-default.php. See [config.md](config.md)
 
 
 ### Node vs PHP
