@@ -14,19 +14,16 @@ namespace Iconify\API;
 
 class Sync {
     protected $_config;
-    protected $_baseDir;
     protected $_versions;
 
     /**
      * Constructor
      *
      * @param array $config
-     * @param string $baseDir
      */
-    public function __construct($config, $baseDir)
+    public function __construct($config)
     {
         $this->_config = $config;
-        $this->_baseDir = $baseDir;
     }
 
     /**
@@ -37,7 +34,7 @@ class Sync {
      */
     public function sync($repo)
     {
-        $dirs = Dirs::instance($this->_config, $this->_baseDir);
+        $dirs = Dirs::instance($this->_config);
         if (!in_array($repo, $dirs->getRepos()) || empty($this->_config['sync'][$repo])) {
             return false;
         }
@@ -48,8 +45,7 @@ class Sync {
         // Start synchronizing
         $time = time();
         $url = $this->_config['sync'][$repo];
-        $target = str_replace('{dir}', $this->_baseDir, $this->_config['sync']['storage']);
-        $target .= '/' . $repo . '.' . $time;
+        $target = $this->_config['sync']['storage'] . '/' . $repo . '.' . $time;
 
         $cmd = strtr($this->_config['sync']['git'], [
             '{repo}'    => '"' . $url . '"',
@@ -75,7 +71,7 @@ class Sync {
      */
     protected function _purgeCache()
     {
-        $dir = str_replace('{dir}', $this->_baseDir, $this->_config['cache-dir']);
+        $dir = $this->_config['cache-dir'];
 
         foreach (new \DirectoryIterator($dir) as $entry) {
             if (!$entry->isFile()) {
@@ -103,8 +99,8 @@ class Sync {
      */
     public function cleanup()
     {
-        $base = str_replace('{dir}', $this->_baseDir, $this->_config['sync']['storage']);
-        $dirs = Dirs::instance($this->_config, $this->_baseDir);
+        $base = $this->_config['sync']['storage'];
+        $dirs = Dirs::instance($this->_config);
         $repos = $dirs->getLatestRepos();
 
         // Find directories that require cleaning

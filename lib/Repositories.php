@@ -14,18 +14,15 @@ namespace Iconify\API;
 
 class Repositories {
     protected $_config;
-    protected $_baseDir;
 
     /**
      * Constructor
      *
      * @param $config
-     * @param $baseDir
      */
-    public function __construct($config, $baseDir)
+    public function __construct($config)
     {
         $this->_config = $config;
-        $this->_baseDir = $baseDir;
     }
 
     /**
@@ -37,7 +34,7 @@ class Repositories {
     {
         $collections = [];
 
-        $dirs = Dirs::instance($this->_config, $this->_baseDir);
+        $dirs = Dirs::instance($this->_config);
         $repos = $dirs->getRepos();
 
         foreach ($repos as $repo) {

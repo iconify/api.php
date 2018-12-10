@@ -18,7 +18,6 @@ class Dirs {
     protected static $_instance = null;
 
     protected $_config;
-    protected $_baseDir;
 
     protected $_repos;
 
@@ -30,13 +29,12 @@ class Dirs {
      * Get instance. This class can have only 1 instance
      *
      * @param $config
-     * @param $baseDir
      * @return Dirs
      */
-    public static function instance($config, $baseDir)
+    public static function instance($config)
     {
         if (self::$_instance === null) {
-            self::$_instance = new Dirs($config, $baseDir);
+            self::$_instance = new Dirs($config);
         }
         return self::$_instance;
     }
@@ -45,12 +43,10 @@ class Dirs {
      * Constructor
      *
      * @param array $config
-     * @param string $baseDir
      */
-    protected function __construct($config, $baseDir)
+    protected function __construct($config)
     {
         $this->_config = $config;
-        $this->_baseDir = $baseDir;
         $this->_repos = [];
 
         // Setup default directories
@@ -59,7 +55,7 @@ class Dirs {
         }
 
         if (!empty($config['custom-icons-dir'])) {
-            $this->_dirs['custom'] = str_replace('{dir}', $baseDir, $config['custom-icons-dir']);
+            $this->_dirs['custom'] = $config['custom-icons-dir'];
         }
 
         $this->_repos = array_keys($this->_dirs);
@@ -94,8 +90,7 @@ class Dirs {
         }
 
         // Check for versions.json
-        $filename = str_replace('{dir}', $this->_baseDir, $this->_config['sync']['versions']);
-        $data = @file_get_contents($filename);
+        $data = @file_get_contents($this->_config['sync']['versions']);
         $data = @json_decode($data, true);
         if (!is_array($data)) {
             return $this->_versions;
@@ -204,7 +199,7 @@ class Dirs {
      */
     protected function _getBaseReposDir()
     {
-        $this->_reposBaseDir = str_replace('{dir}', $this->_baseDir, $this->_config['sync']['storage']);
+        $this->_reposBaseDir = $this->_config['sync']['storage'];
     }
 
     /**
@@ -222,11 +217,10 @@ class Dirs {
         }
 
         // Make storage directory
-        $dir = str_replace('{dir}', $this->_baseDir, $this->_config['sync']['storage']);
-        @mkdir($dir);
+        @mkdir($this->_config['sync']['storage']);
 
         // Save versions.json
-        $filename = str_replace('{dir}', $this->_baseDir, $this->_config['sync']['versions']);
+        $filename = $this->_config['sync']['versions'];
         @file_put_contents($filename, json_encode($this->_versions, JSON_PRETTY_PRINT));
     }
 

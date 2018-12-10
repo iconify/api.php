@@ -2,6 +2,7 @@ bin
 .idea
 .DS_Store
 config.json
+config.php
 cache/*.php
 vendor
 composer.phar

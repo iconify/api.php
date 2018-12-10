@@ -1,25 +1,33 @@
 <?php
 
 include('vendor/autoload.php');
+include('./config-default.php');
 
-// Load config
-$config = json_decode(file_get_contents(__DIR__ . '/config-default.json'), true);
-$customConfig = @file_get_contents(__DIR__ . '/config.json');
-if ($customConfig) {
-    $customConfig = json_decode($customConfig, true);
-    foreach ($customConfig as $key => $value) {
-        if (!isset($config[$key])) {
-            continue;
-        }
-        if (is_array($config[$key])) {
-            // Merge objects
-            foreach ($customConfig[$key] as $key2 => $value2) {
-                $config[$key][$key2] = $value2;
-            }
-        } else {
-            $config[$key] = $customConfig[$key];
-        }
+/**
+ * Merge default and custom config
+ *
+ * @param $default
+ * @return array
+ */
+function getCustomConfig($default)
+{
+    $config = null;
+    if (!@file_exists(__DIR__ . '/config.php')) {
+        return $default;
     }
+
+    try {
+        if (!@include __DIR__ . '/config.php') {
+            return $default;
+        }
+    } catch (\Throwable $e) {
+        return $default;
+    }
+
+    if (is_array($config)) {
+        return array_replace_recursive($default, $config);
+    }
+    return $default;
 }
 
 /**
@@ -92,8 +100,8 @@ function parseRequest($prefix, $query, $ext)
     global $config;
 
     // Init registry
-    $registry = new Iconify\API\Registry(str_replace('{dir}', __DIR__, $config['cache-dir']), function() use ($config) {
-        $repos = new \Iconify\API\Repositories($config, __DIR__);
+    $registry = new Iconify\API\Registry($config['cache-dir'], function() use ($config) {
+        $repos = new \Iconify\API\Repositories($config);
         return $repos->locateCollections();
     });
 
@@ -133,6 +141,9 @@ function parseRequest($prefix, $query, $ext)
     echo $result['body'];
     exit(0);
 }
+
+// Load config
+$config = getCustomConfig($config);
 
 // Check Origin
 if (isset($_SERVER['HTTP_ORIGIN']) && $config['cors']) {
@@ -212,7 +223,7 @@ if ($url === 'sync') {
     if (!isset($config['sync']) || empty($config['sync']['secret']) || $_REQUEST['key'] !== $config['sync']['secret']) {
         $result = false;
     } else {
-        $sync = new \Iconify\API\Sync($config, __DIR__);
+        $sync = new \Iconify\API\Sync($config);
         $result = $sync->sync($_REQUEST['repo']);
     }
 

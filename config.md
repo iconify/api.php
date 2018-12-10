@@ -1,18 +1,19 @@
 # Configuration options
 
-Default options are in config-default.json
+Default options are in config-default.php
 
-Do not edit config-default.json unless you are making your own fork of project. All custom config options should be added to config.json. Create empty config.json:
+Do not edit config-default.php unless you are making your own fork of project. All custom config options should be added to config.php. Create empty config.php:
 
 ```
-{
-}
+<?php
+
+$config = [];
 ```
 
 then add custom configuration variables to it.
 
 
-## Server configiration
+## Server configuration
 
 #### region
 
@@ -28,8 +29,6 @@ If true, script will check for environment variable "REGION" and if it is set, i
 
 Directory with custom json files.
 
-Use {dir} variable to specify application's directory.
-
 #### serve-default-icons
 
 True if default Iconify icons set should be served.
@@ -42,12 +41,10 @@ URL to redirect browser when browsing main page. Redirection is permanent.
 
 Directory for response cache.
 
-Use {dir} variable to specify application's directory.
-
 
 ## Browser cache controls
 
-Cache configiration is stored in "cache" object. Object properties:
+Cache configuration is stored in "cache" object. Object properties:
 
 #### timeout
 
@@ -68,7 +65,7 @@ Server can pull collections from Git service. This can be used to push collectio
 
 There are two collections available: iconify and custom.
 
-All configuration options are in "sync" object in config-default.json. Use {dir} variable in directories to point to application directory.
+All configuration options are in "sync" object in config-default.json.
 
 To synchronize repository send GET request to /sync?repo=iconify&key=your-sync-key
 Replace repo with "custom" to synchronize custom repository and key with value of sync.secret
