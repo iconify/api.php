@@ -214,7 +214,7 @@ if ($url === 'version') {
 
 if ($url === 'sync') {
     // Synchronize repository
-    if (!isset($_REQUEST['repo']) || !isset($_REQUEST['key'])) {
+    if (!isset($_REQUEST['repo']) || !isset($_REQUEST['key']) || !is_string($_REQUEST['repo']) || !is_string($_REQUEST['key'])) {
         sendError(400);
         exit(0);
     }
