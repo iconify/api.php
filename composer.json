@@ -1,6 +1,6 @@
 {
 	"description": "PHP version of api.iconify.design",
-	"version": "1.0.0-rc2",
+	"version": "1.0.0",
 	"type": "project",
 	"license": "MIT",
 	"homepage": "https://iconify.design/",
