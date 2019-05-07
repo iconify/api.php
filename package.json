@@ -1,5 +1,11 @@
 {
   "scripts": {
     "test": "bin/phpunit"
+  },
+  "bugs": "https://github.com/iconify/api.php/issues",
+  "homepage": "https://github.com/iconify/api.php",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/iconify/api.php.git"
   }
 }

@@ -22,7 +22,7 @@ $config = [
         'storage' => __DIR__ . '/git-repos',
         'git' => 'git clone {repo} --depth 1 --no-tags {target}',
         'secret' => '',
-        'iconify' => 'https://github.com/iconify-design/collections-json.git',
+        'iconify' => 'https://github.com/iconify/collections-json.git',
         'custom' => '',
         'custom-dir' => ''
     ],
